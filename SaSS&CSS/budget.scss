@@ -1,0 +1,20 @@
+$primaryColor : rgb(206, 117, 132);
+$budgetColor : rgba(149, 247, 149, 0.688) ;
+
+@import "./header";
+
+
+header {
+  background: $primaryColor;
+  font-size: x-large;
+  p {
+    background: $primaryColor;
+  }
+}
+
+.budgetDisplay {
+  background: $budgetColor;
+  h2 {
+    font-size: x-large;
+  }
+}

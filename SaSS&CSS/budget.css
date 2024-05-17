@@ -1,0 +1,14 @@
+header {
+  background: rgb(206, 117, 132);
+  font-size: x-large;
+}
+header p {
+  background: rgb(206, 117, 132);
+}
+
+.budgetDisplay {
+  background: rgba(149, 247, 149, 0.688);
+}
+.budgetDisplay h2 {
+  font-size: x-large;
+}/*# sourceMappingURL=budget.css.map */
