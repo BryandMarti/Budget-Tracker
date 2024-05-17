@@ -5,13 +5,13 @@ class Transaction {
     this.amount = amount;
   }
 
-  // Method to check if the transaction is valid
+  //this method makes sure to check if the Transaction is Valid, it would return true or False
   isValid() {
     return this.description && this.amount && this.amount > 0;
   }
 }
 
-// Income class inheriting from Transaction
+//this Income as well as Expense class will be inheriting from Transaction class
 class Income extends Transaction {
   constructor(description, amount) {
     super(description, amount);
@@ -25,13 +25,13 @@ class Expense extends Transaction {
   }
 }
 
-// Budget class
+// Budget class using Local storage to alocate data, Please refer to ReadMe for more details
 class Budget {
   constructor() {
-    // Initialize incomes and expenses from local storage or as empty arrays
+    // this (this) will Initialize the income snd expenses from a local storage or as empty arrays
     this.incomes = JSON.parse(localStorage.getItem('incomes')) || [];
     this.expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-    // Initialize previous state for undo functionality
+    //"undo" button implementation, initializing previous tracing for undo functionality later on the code
     this.previousState = { incomes: [], expenses: [] };
     // Initialize the budget
     this.init();
@@ -45,13 +45,13 @@ class Budget {
     this.displayTransactions();
   }
 
-  // Setup forms dynamically
+  //this will help set the forms to be dynamic.
   setupForms() {
     const incomeSection = document.getElementById('incomeSection');
     const expenseSection = document.getElementById('expenseSection');
     const summarySection = document.getElementById('summary');
 
-    // Income form
+    //Creating the Element form adding a feature (preventDefaault) to cancel unnecessary keystrokes
     const incomeForm = document.createElement('form');
     incomeForm.id = 'incomeForm';
     incomeForm.addEventListener('submit', (event) => {
@@ -59,7 +59,7 @@ class Budget {
       this.addIncome();
     });
 
-    // Create input elements for income description and amount
+    //this series of codes will help me create a more JavaScript oriented code and leave behind hard coding on HTML
     const incomeDescriptionLabel = document.createElement('label');
     incomeDescriptionLabel.setAttribute('for', 'incomeDescription');
     incomeDescriptionLabel.textContent = 'Description:';
@@ -78,12 +78,12 @@ class Budget {
     incomeAmountInput.placeholder = 'Amount';
     incomeAmountInput.required = true;
 
-    // Create submit button for adding income
+    //this creates a submit button to add incometo the localStorage/empty array
     const incomeSubmitButton = document.createElement('button');
     incomeSubmitButton.type = 'submit';
     incomeSubmitButton.textContent = 'Add Income';
 
-    // Append input elements and submit button to the form
+    //I need to append input elements and buttons 
     incomeForm.append(
       incomeDescriptionLabel,
       incomeDescriptionInput,
@@ -95,7 +95,7 @@ class Budget {
     // Append income form to the income section
     incomeSection.appendChild(incomeForm);
 
-    // Expense form
+    //Expenses Form same for lines (54 thru 96)
     const expenseForm = document.createElement('form');
     expenseForm.id = 'expenseForm';
     expenseForm.addEventListener('submit', (event) => {
@@ -139,7 +139,7 @@ class Budget {
     // Append expense form to the expense section
     expenseSection.appendChild(expenseForm);
 
-    // Summary section
+    //this section is coded in regard to the summary (the total of the Income, Expense, and Budget)
     const totalIncome = document.createElement('p');
     totalIncome.textContent = 'Total Income: ';
     const totalIncomeAmount = document.createElement('span');
@@ -158,7 +158,7 @@ class Budget {
     totalBudgetAmount.id = 'totalBudget';
     totalBudget.append(totalBudgetAmount);
 
-    // Create buttons for undo and reset
+    //implementing a more intuitive look with an Undo and Reset Button
     const undoButton = document.createElement('button');
     undoButton.id = 'undoButton';
     undoButton.textContent = 'Undo';
@@ -177,7 +177,7 @@ class Budget {
     summarySection.append(totalIncome, totalExpenses, totalBudget, undoButton, resetButton);
   }
 
-  // Method to add income
+  //this is where the Method to calculate the Incomes
   addIncome() {
     const description = document.getElementById('incomeDescription').value;
     const amount = parseFloat(document.getElementById('incomeAmount').value);
@@ -192,8 +192,8 @@ class Budget {
     }
   }
 
-  // Method to add expense
-  addExpense() {
+    //this is where the Method to calculate the Expenses
+    addExpense() {
     const description = document.getElementById('expenseDescription').value;
     const amount = parseFloat(document.getElementById('expenseAmount').value);
     const expense = new Expense(description, amount);
@@ -207,8 +207,8 @@ class Budget {
     }
   }
 
-  // Method to undo the last transaction
-  undo() {
+    //Method to undo (talked more about learning aproach in ReadMe file)
+    undo() {
     this.incomes.pop();
     this.expenses.pop();
     this.saveData();
@@ -216,36 +216,34 @@ class Budget {
     this.displayTransactions();
   }
 
-  // Method to calculate total incomes
-  calculateTotalIncomes() {
+    //total Income, Expenses, and Budget calculation Methods
+    calculateTotalIncomes() {
     return this.incomes.reduce((total, income) => total + income.amount, 0);
   }
 
-  // Method to calculate total expenses
   calculateTotalExpenses() {
     return this.expenses.reduce((total, expense) => total + expense.amount, 0);
   }
 
-  // Method to calculate total budget
   calculateTotalBudget() {
     return this.calculateTotalIncomes() - this.calculateTotalExpenses();
   }
 
-  // Method to save data to local storage
-  saveData() {
+    //Decided to alocate data to local storage
+    saveData() {
     localStorage.setItem('incomes', JSON.stringify(this.incomes));
     localStorage.setItem('expenses', JSON.stringify(this.expenses));
   }
 
-  // Method to update summary
-  updateSummary() {
+    //this method updates the summary portion of the Budget calculator
+    updateSummary() {
     document.getElementById('totalIncome').textContent = this.calculateTotalIncomes();
     document.getElementById('totalExpenses').textContent = this.calculateTotalExpenses();
     document.getElementById('totalBudget').textContent = this.calculateTotalBudget();
   }
 
-  // Method to display transactions
-  displayTransactions() {
+    //With this Method I displayed the data in to the application.
+    displayTransactions() {
     const incomeList = document.getElementById('incomeList');
     const expenseList = document.getElementById('expenseList');
 
@@ -265,8 +263,8 @@ class Budget {
     });
   }
 
-  // Method to reset the budget
-  reset() {
+    //Method to undo (talked more about learning aproach in ReadMe file)
+    reset() {
     this.incomes = [];
     this.expenses = [];
     localStorage.removeItem('incomes');
