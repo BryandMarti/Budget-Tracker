@@ -26,7 +26,7 @@ class Expense extends Transaction {
   }
 }
 
-// Budget class
+// Budget class and constructor creation with localstorage as our memory.
 class Budget {
   constructor() {
     this.incomes = JSON.parse(localStorage.getItem('incomes')) || [];
@@ -40,12 +40,13 @@ class Budget {
     this.updateSummary();
     this.displayTransactions();
   }
-
+// using variables to store data coming from the DOM elements
   setupForms() {
     const incomeSection = document.getElementById('incomeSection');
     const expenseSection = document.getElementById('expenseSection');
     const summarySection = document.getElementById('summary');
 
+    //appending the elements
     const incomeForm = this.createForm('incomeForm', 'incomeDescription', 'incomeAmount', 'incomeDate', 'Add Income', this.addIncome.bind(this));
     incomeSection.appendChild(incomeForm);
 
@@ -55,6 +56,7 @@ class Budget {
     this.createSummary(summarySection);
 }
 
+//event listener function for the forms
 createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
   const form = document.createElement('form');
   form.id = formId;
@@ -63,6 +65,8 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
       submitHandler();
   });
 
+
+  //creating elements to later insert them into HTML using InnerHtml
   const descriptionLabel = document.createElement('label');
   descriptionLabel.setAttribute('for', descriptionId);
   descriptionLabel.textContent = 'Budget Name:';
@@ -81,8 +85,7 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
   amountInput.maxLength = 10;
   
 
-  // Updated lines for replacing existing input with new input
-  amountInput.removeAttribute('type');
+  amountInput.removeAttribute('number');
   amountInput.setAttribute('maxlength', '9');
 
   const dateLabel = document.createElement('label');
@@ -101,12 +104,13 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
 }
 
 
-
+//this displays the sumary into the website, putting together all income, expense and budget
   createSummary(summarySection) {
     const totalIncome = this.createSummaryElement('Total Income:', 'totalIncome');
     const totalExpenses = this.createSummaryElement('Total Expenses:', 'totalExpenses');
     const totalBudget = this.createSummaryElement('Total Budget:', 'totalBudget');
 
+    //created an undo and reset button
     const undoButton = document.createElement('button');
     undoButton.id = 'undoButton';
     undoButton.textContent = 'Undo';
@@ -132,7 +136,7 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
     element.append(span);
     return element;
   }
-
+//over to this code, we are adding the income, and expenses, to later on use this variable and store it on LocalStorage
   addIncome() {
     const description = document.getElementById('incomeDescription').value;
     const amount = parseFloat(document.getElementById('incomeAmount').value);
@@ -162,7 +166,7 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
       alert('Please enter valid expense description and amount.');
     }
   }
-
+//this undos the last addition, or last calculation between income and expense... needs some work.
   undo() {
     if (this.incomes.length > 0) this.incomes.pop();
     if (this.expenses.length > 0) this.expenses.pop();
@@ -183,6 +187,8 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
     return this.calculateTotalIncomes() - this.calculateTotalExpenses();
   }
 
+
+  //here we are using the function Localstorage and stringying it to its Unique JSOn file
   saveData() {
     localStorage.setItem('incomes', JSON.stringify(this.incomes));
     localStorage.setItem('expenses', JSON.stringify(this.expenses));
@@ -194,6 +200,7 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
     document.getElementById('totalBudget').textContent = this.calculateTotalBudget();
   }
 
+  // here we are going to display our last part of the code where we are using function expression => to show our UL/LI with names and amount of budge
   displayTransactions() {
     const incomeList = document.getElementById('incomeList');
     const expenseList = document.getElementById('expenseList');
@@ -213,7 +220,7 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
       expenseList.appendChild(listItem);
     });
   }
-
+//reset button as talked above
   reset() {
     this.incomes = [];
     this.expenses = [];
