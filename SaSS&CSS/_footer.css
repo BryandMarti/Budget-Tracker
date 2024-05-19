@@ -5,4 +5,5 @@ footer {
   padding: 2px;
   flex-direction: row;
   background-color: orange;
+  background-color: rgba(237, 181, 151, 0.137255);
 }

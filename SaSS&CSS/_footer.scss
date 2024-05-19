@@ -8,5 +8,7 @@
 }
 
 footer {
-  @include footerstyle(row, orange)
+  @include footerstyle(row, orange)   ;
+  background-color: rgba(237, 181, 151, 0.137254902);
+
 }
