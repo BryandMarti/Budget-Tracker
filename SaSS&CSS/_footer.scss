@@ -1,0 +1,12 @@
+@mixin footerstyle($flexdirection, $backgroundHeader) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  flex-direction: $flexdirection;
+  background-color: $backgroundHeader;
+}
+
+footer {
+  @include footerstyle(row, orange)
+}
