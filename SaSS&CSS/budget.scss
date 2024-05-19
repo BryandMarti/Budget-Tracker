@@ -16,7 +16,12 @@ $in-w: $n-char*($char-w + $gap);
   display: flex;
   justify-content: center;
 }
-
+html, body {
+  margin: 0;
+  padding: 0;
+  font-size: $base-font-size;
+  line-height: 1.5;
+}
 @mixin buttonStyles($color, $text-color) {
   padding: 10px 20px;
   border: none;
@@ -28,25 +33,51 @@ $in-w: $n-char*($char-w + $gap);
     background-color: darken($color, 10%);
   }
 }
-
-@mixin fontSizePos($fontSize, $pad) {
-  font-size: $fontSize;
-  padding: $pad;
+@mixin mainElementPhone {
+  padding: 0.3rem;
+  background-color: #e0d8d4;
+  #incomeSection, #expenseSection{
+    @include amountSection(fit-content);
+    #incomeForm, #expenseForm {
+      @include amountForm(86vw, 0, 0);
+        #incomeAmount, #expenseAmount{
+          @include inputAmount375px(13.5ch);
+      }
+  
+  }
+  }
 }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  font-size: $base-font-size;
-  line-height: 1.5;
+@mixin sumaryElementPhone {
+  background-image: linear-gradient(176deg, white, #a1eac4, #ff5c5c);
+  justify-content: center;
+  border: 0.5px solid #ffa501;
+  box-shadow: inset 0px -6px 12px 0px #ffa501;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-shadow: inset 0px 1px 12px 2px #050505;
+}
+@mixin undoReset($undoButton, $resetButton) {
+  border-radius: 15px 15px 0 0;
+  background-color: $undoButton;
+  background-color: $resetButton;
+  color: rgb(0, 0, 0);
+  $char-w: 1ch;
+  $gap: .5*$char-w;
+  $n-char: 9;
+  $in-w: $n-char*($char-w + $gap);
+font: 2ch droid sans mono, consolas, monospace;
+letter-spacing: $gap
 }
 
 
 main, form, #summary, ul {
   padding: $base-spacing;
 }
-
-@mixin amountSection{
+@mixin fontSizePos($fontSize, $pad) {
+  font-size: $fontSize;
+  padding: $pad;
+}
+@mixin amountSection($fitContent){
   display: flex;
   background-image: linear-gradient(176deg, white, #a1eac4, #ff5c5c);
   justify-content: center;
@@ -54,23 +85,25 @@ main, form, #summary, ul {
   box-shadow: inset 0px -6px 12px 0px #ffa501;
   border-radius: 5px;
   margin-bottom: 10px;
+  width: $fitContent;
 }
-@mixin amountForm{
+@mixin amountForm($widthForm, $marginTop, $marginBottom){
   display: grid;
   justify-items: center;
   border: 0.5px solid #ff000000;
   box-shadow: inset 0px 1px 12px 2px #050505;
   border-radius: 5px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: $marginTop;
+  margin-bottom: $marginBottom;
+  width: $widthForm;
 }
-@mixin inputAmount375px{
+@mixin inputAmount375px($width){
   display: block;
 	margin:  auto;
 	border: none;
   margin-bottom: 5px;
 	padding: 0;
-	width: $in-w;
+	width: $width;
 	background: repeating-linear-gradient(90deg, 
 		dimgrey 0, dimgrey $char-w, 
 		transparent 0, transparent $char-w + $gap) 
@@ -116,9 +149,9 @@ main, form, #summary, ul {
 }
 
 #incomeSection, #expenseSection{
-  @include amountSection;
+  @include amountSection(fit-content);
   #incomeForm, #expenseForm {
-    @include amountForm;
+    @include amountForm(86vw, 0, 0);
       #incomeAmount, #expenseAmount{
         @include inputAmount;
     }
@@ -201,20 +234,13 @@ ul {
   }
 }
 
-@media screen and (max-width: 375px) {
+@media screen and (max-width: 375px) and (min-width: 270px){
+
+
   main {
-    padding: 0.3rem;
-    background-color: #e0d8d4;
-    #incomeSection, #expenseSection{
-      @include amountSection;
-      #incomeForm, #expenseForm {
-        @include amountForm;
-          #incomeAmount, #expenseAmount{
-            @include inputAmount;
-        }
-    
-    }
-    }
+    font-size: medium;
+
+@include mainElementPhone;
     
     
     #incomeForm, #expenseForm {
@@ -233,32 +259,182 @@ ul {
       margin-bottom: 5px;
       font: $font-family
     }
+
+    #summary {
+      @include sumaryElementPhone;
+    }
+
+    @mixin unorderListElement {
+      font: $font-family;
+      list-style: none;
+      padding: 0;
+      li {
+        border: 0.5px solid rgba(255, 0, 0, 0);
+        box-shadow: inset 0px 1px 12px 2px #050505;
+        margin-top: 20px;
+        padding: 10px;
+        background-color: rgb(234 150 150 / 15%);
+        border-radius: 5px;
+        margin-bottom: 5px;
+      }
+    }
+    ul {
+      @include unorderListElement;
+    }
+
+
+
+    button{
+      @include buttonStyles($button-color, white);
+      font: $font-family;
+      #undoButton {
+        @include undoReset($undoButton, 0);
+      }
+      #resetButton {
+        @include undoReset($resetButton, 0);
+      }
+    }
   }
 }
 
 @media screen and (max-width: 768px) and (min-width: 376px) {
-  header {
-    h1 {
-      font-size: 4rem;
-    }
-  }
   main {
-    @include fontSizePos(0.3rem, 4rem);
-    input {
-      @include fontSizePos(28px, 0)
+    font-size: x-large;
+    display: flex;
+    padding: 0.3rem;
+    background-color: #e0d8d4;
+    flex-direction: column;
+    align-items: center;
+    @include mainElementPhone;
+        
+        
+        #incomeForm, #expenseForm {
+          label{
+            @include labelDescriptionCodeUI;
+          }
+        }
+        
+        #incomeForm, #expenseForm {
+          #incomeDescription, #expenseDescription {
+            @include labelDescriptionCodeUI;
+          }
+        }
+        
+        #incomeDate, #expenseDate {
+          margin-bottom: 5px;
+          font: $font-family
+        }
+    
+        #summary {
+          @include sumaryElementPhone;
+        }
+    
+        @mixin unorderListElement {
+          font: $font-family;
+          list-style: none;
+          padding: 0;
+          li {
+            border: 0.5px solid rgba(255, 0, 0, 0);
+            box-shadow: inset 0px 1px 12px 2px #050505;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgb(234 150 150 / 15%);
+            border-radius: 5px;
+            margin-bottom: 5px;
+          }
+        }
+        ul {
+          @include unorderListElement;
+        }
+    
+    
+    
+        button{
+          @include buttonStyles($button-color, white);
+          font: $font-family;
+          #undoButton {
+            @include undoReset($undoButton, 0);
+          }
+          #resetButton {
+            @include undoReset($resetButton, 0);
+          }
+        }
+      }
     }
+
+@media screen and (min-width: 769px) {
+  main {
+    font-size: xx-large;
+    display: grid;
+    padding: 0.3rem;
+    background-color: #e0d8d4;
+    flex-direction: column;
+    align-items: center; 
+    @include mainElementPhone;
+    justify-items: center;
+
   }
-  form {
-    @include fontSizePos(42px, 1px);
+  
+        
+        
+        #incomeForm, #expenseForm {
+          width: 40vw;
+          label{
+            @include labelDescriptionCodeUI;
+
+          }
+        }
+        
+        #incomeForm, #expenseForm {
+          #incomeDescription, #expenseDescription {
+            @include labelDescriptionCodeUI;
+          }
+        }
+        
+        #incomeDate, #expenseDate {
+          margin-bottom: 5px;
+          font: $font-family
+        }
+  
+        #summary {
+          @include sumaryElementPhone;
+        }
+    
+        @mixin unorderListElement {
+          font: $font-family;
+          list-style: none;
+          padding: 0;
+          li {
+            border: 0.5px solid rgba(255, 0, 0, 0);
+            box-shadow: inset 0px 1px 12px 2px #050505;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgb(234 150 150 / 15%);
+            border-radius: 5px;
+            margin-bottom: 5px;
+          }
+        }
+        ul {
+          @include unorderListElement;
+        }
+    
+    
+    
+        button{
+          @include buttonStyles($button-color, white);
+          font: $font-family;
+          #undoButton {
+            @include undoReset($undoButton, 0);
+          }
+          #resetButton {
+            @include undoReset($resetButton, 0);
+          }
+        }
+      }
+ @media screen and (min-width: 1200px) {
+  #summaryList {
+    display: flex;
+    align-items: flex-start; 
   }
 
-  button, #undoButton, #resetButton, #summary, ul {
-    @include fontSizePos(32px, 20px);
-  }
-
-  #incomeList, #expenseList {
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-bottom: $base-spacing;
-  }
-}
+ }
