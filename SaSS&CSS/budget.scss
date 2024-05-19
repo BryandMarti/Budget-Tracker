@@ -1,20 +1,256 @@
-$primaryColor : rgb(206, 117, 132);
-$budgetColor : rgba(149, 247, 149, 0.688) ;
+$primary-color: #3498db;
+$color-font: rgb(253, 63, 0);
+$button-color: #2ecc71;
+$undoButton: yellow;
+$resetButton: rgb(231, 12, 12);
+$font-family: Arial, sans-serif;
+$base-font-size: 16px;
+$base-spacing: 16px;
+@import "./_header";
+@import "./footer";
+@mixin beautylabel {
+  display: flex;
+  justify-content: center;
+}
 
-@import "./header";
-
-
-header {
-  background: $primaryColor;
-  font-size: x-large;
-  p {
-    background: $primaryColor;
+@mixin buttonStyles($color, $text-color) {
+  padding: 10px 20px;
+  border: none;
+  background-color: $color;
+  color: $text-color;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: darken($color, 10%);
   }
 }
 
-.budgetDisplay {
-  background: $budgetColor;
-  h2 {
-    font-size: x-large;
+@mixin fontSizePos($fontSize, $pad) {
+  font-size: $fontSize;
+  padding: $pad;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family;
+  font-size: $base-font-size;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: $base-spacing;
+}
+
+
+
+#incomeForm {
+  label{
+    $char-w: 1ch;
+    $gap: .07*$char-w;
+    $n-char: 9;
+    $in-w: $n-char*($char-w + $gap);
+
+    background: repeating-linear-gradient(90deg, 
+		dimgrey 0, dimgrey $char-w, 
+		0, t $char-w + $gap) 
+		0 100%/ #{$in-w - $gap} 2px no-repeat;
+	font: 3.1ch droid sans mono, consolas, monospace;
+	letter-spacing: $gap
+  }
+}
+#incomeForm {
+  #incomeDescription{
+    $char-w: 1ch;
+    $gap: .5*$char-w;
+    $n-char: 9;
+    $in-w: $n-char*($char-w + $gap);
+
+    background: repeating-linear-gradient(90deg, 
+		dimgrey 0, dimgrey $char-w, 
+		0, t $char-w + $gap) 
+		0 100%/ #{$in-w - $gap} 2px no-repeat;
+	font: 5ch droid sans mono, consolas, monospace;
+	letter-spacing: $gap
+  }
+}
+
+
+
+main, form, #summary, ul {
+  padding: $base-spacing;
+}
+
+@mixin amountSection{
+  display: flex;
+  justify-content: center;
+}
+@mixin amountForm{
+  display: grid;
+  justify-items: center;
+}
+@mixin inputAmount375px{
+  display: block;
+	margin:  auto;
+	border: none;
+	padding: 0;
+  $char-w: 1ch;
+  $gap: .5*$char-w;
+  $n-char: 9;
+  $in-w: $n-char*($char-w + $gap);
+	width: $in-w;
+	background: repeating-linear-gradient(90deg, 
+		dimgrey 0, dimgrey $char-w, 
+		transparent 0, transparent $char-w + $gap) 
+		0 100%/ #{$in-w - $gap} 2px no-repeat;
+	font: 4.1ch droid sans mono, consolas, monospace;
+	letter-spacing: $gap;
+	
+	&:focus {
+		outline: none;
+		color: dodgerblue;
+	}
+}
+@mixin inputAmount{
+  display: block;
+	margin:  auto;
+	border: none;
+	padding: 0;
+  $char-w: 1ch;
+  $gap: .5*$char-w;
+  $n-char: 9;
+  $in-w: $n-char*($char-w + $gap);
+	width: $in-w;
+	background: repeating-linear-gradient(90deg, 
+		dimgrey 0, dimgrey $char-w, 
+		transparent 0, transparent $char-w + $gap) 
+		0 100%/ #{$in-w - $gap} 2px no-repeat;
+	font: 5ch droid sans mono, consolas, monospace;
+	letter-spacing: $gap;
+	
+	&:focus {
+		outline: none;
+		color: dodgerblue;
+	}
+}
+
+#incomeSection{
+  @include amountSection;
+  #incomeForm {
+    @include amountForm;
+      #incomeAmount{
+        @include inputAmount;
+    }
+
+}
+}
+
+#expenseSection{
+  @include amountSection;
+  #expenseForm {
+    @include amountForm;
+      #expenseAmount{
+        @include inputAmount;
+    }
+
+}
+}
+
+button, #undoButton, #resetButton {
+  @include buttonStyles($button-color, white);
+}
+
+#undoButton {
+  background-color: $undoButton;
+  color: rgb(0, 0, 0);
+  $char-w: 1ch;
+  $gap: .5*$char-w;
+  $n-char: 9;
+  $in-w: $n-char*($char-w + $gap);
+
+  background: repeating-linear-gradient(90deg, 
+  dimgrey 0, dimgrey $char-w, 
+  0, t $char-w + $gap) 
+  0 100%/ #{$in-w - $gap} 2px no-repeat;
+font: 5ch droid sans mono, consolas, monospace;
+letter-spacing: $gap
+}
+
+
+#resetButton {
+  background-color: $resetButton;
+}
+
+#summary {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  margin-bottom: $base-spacing;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  li {
+    text-decoration: none;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  main {
+    padding: 2rem;
+  }
+  #incomeSection{
+    @include amountSection;
+    #incomeForm {
+      @include amountForm;
+        #incomeAmount{
+          @include inputAmount375px;
+      }
+  
+  }
+  }
+  
+  #expenseSection{
+    @include amountSection;
+    #expenseForm {
+      @include amountForm;
+        #expenseAmount{
+          @include inputAmount375px;
+      }
+  
+  }
+  }
+}
+
+@media screen and (max-width: 768px) and (min-width: 376px) {
+  header {
+    h1 {
+      font-size: 4rem;
+    }
+  }
+  main {
+    @include fontSizePos(0.3rem, 4rem);
+    input {
+      @include fontSizePos(28px, 0)
+    }
+  }
+  form {
+    @include fontSizePos(42px, 1px);
+  }
+
+  button, #undoButton, #resetButton, #summary, ul {
+    @include fontSizePos(32px, 20px);
+  }
+
+  #incomeList, #expenseList {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: $base-spacing;
   }
 }

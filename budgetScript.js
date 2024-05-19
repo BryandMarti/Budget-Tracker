@@ -1,164 +1,112 @@
 // Transaction class
 class Transaction {
-  constructor(description, amount) {
+  constructor(description, amount, date) {
     this.description = description;
     this.amount = amount;
+    this.date = date || null;
   }
 
-  //this method makes sure to check if the Transaction is Valid, it would return true or False
+  // Check if the transaction is valid
   isValid() {
     return this.description && this.amount && this.amount > 0;
   }
 }
 
-//this Income as well as Expense class will be inheriting from Transaction class
+// Income class inheriting from Transaction
 class Income extends Transaction {
-  constructor(description, amount) {
-    super(description, amount);
+  constructor(description, amount, date) {
+    super(description, amount, date);
   }
 }
 
 // Expense class inheriting from Transaction
 class Expense extends Transaction {
-  constructor(description, amount) {
-    super(description, amount);
+  constructor(description, amount, date) {
+    super(description, amount, date);
   }
 }
 
-// Budget class using Local storage to alocate data, Please refer to ReadMe for more details
+// Budget class
 class Budget {
   constructor() {
-    // this (this) will Initialize the income snd expenses from a local storage or as empty arrays
     this.incomes = JSON.parse(localStorage.getItem('incomes')) || [];
     this.expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-    //"undo" button implementation, initializing previous tracing for undo functionality later on the code
     this.previousState = { incomes: [], expenses: [] };
-    // Initialize the budget
     this.init();
   }
 
-  // Initialize method
   init() {
-    // Setup forms, update summary, and display transactions
     this.setupForms();
     this.updateSummary();
     this.displayTransactions();
   }
 
-  //this will help set the forms to be dynamic.
   setupForms() {
     const incomeSection = document.getElementById('incomeSection');
     const expenseSection = document.getElementById('expenseSection');
     const summarySection = document.getElementById('summary');
 
-    //Creating the Element form adding a feature (preventDefaault) to cancel unnecessary keystrokes
-    const incomeForm = document.createElement('form');
-    incomeForm.id = 'incomeForm';
-    incomeForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      this.addIncome();
-    });
-
-    //this series of codes will help me create a more JavaScript oriented code and leave behind hard coding on HTML
-    const incomeDescriptionLabel = document.createElement('label');
-    incomeDescriptionLabel.setAttribute('for', 'incomeDescription');
-    incomeDescriptionLabel.textContent = 'Description:';
-    const incomeDescriptionInput = document.createElement('input');
-    incomeDescriptionInput.type = 'text';
-    incomeDescriptionInput.id = 'incomeDescription';
-    incomeDescriptionInput.placeholder = 'Description';
-    incomeDescriptionInput.required = true;
-
-    const incomeAmountLabel = document.createElement('label');
-    incomeAmountLabel.setAttribute('for', 'incomeAmount');
-    incomeAmountLabel.textContent = 'Amount:';
-    const incomeAmountInput = document.createElement('input');
-    incomeAmountInput.type = 'number';
-    incomeAmountInput.id = 'incomeAmount';
-    incomeAmountInput.placeholder = 'Amount';
-    incomeAmountInput.required = true;
-
-    //this creates a submit button to add incometo the localStorage/empty array
-    const incomeSubmitButton = document.createElement('button');
-    incomeSubmitButton.type = 'submit';
-    incomeSubmitButton.textContent = 'Add Income';
-
-    //I need to append input elements and buttons 
-    incomeForm.append(
-      incomeDescriptionLabel,
-      incomeDescriptionInput,
-      incomeAmountLabel,
-      incomeAmountInput,
-      incomeSubmitButton
-    );
-
-    // Append income form to the income section
+    const incomeForm = this.createForm('incomeForm', 'incomeDescription', 'incomeAmount', 'incomeDate', 'Add Income', this.addIncome.bind(this));
     incomeSection.appendChild(incomeForm);
 
-    //Expenses Form same for lines (54 thru 96)
-    const expenseForm = document.createElement('form');
-    expenseForm.id = 'expenseForm';
-    expenseForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      this.addExpense();
-    });
-
-    // Create input elements for expense description and amount
-    const expenseDescriptionLabel = document.createElement('label');
-    expenseDescriptionLabel.setAttribute('for', 'expenseDescription');
-    expenseDescriptionLabel.textContent = 'Description:';
-    const expenseDescriptionInput = document.createElement('input');
-    expenseDescriptionInput.type = 'text';
-    expenseDescriptionInput.id = 'expenseDescription';
-    expenseDescriptionInput.placeholder = 'Description';
-    expenseDescriptionInput.required = true;
-
-    const expenseAmountLabel = document.createElement('label');
-    expenseAmountLabel.setAttribute('for', 'expenseAmount');
-    expenseAmountLabel.textContent = 'Amount:';
-    const expenseAmountInput = document.createElement('input');
-    expenseAmountInput.type = 'number';
-    expenseAmountInput.id = 'expenseAmount';
-    expenseAmountInput.placeholder = 'Amount';
-    expenseAmountInput.required = true;
-
-    // Create submit button for adding expense
-    const expenseSubmitButton = document.createElement('button');
-    expenseSubmitButton.type = 'submit';
-    expenseSubmitButton.textContent = 'Add Expense';
-
-    // Append input elements and submit button to the form
-    expenseForm.append(
-      expenseDescriptionLabel,
-      expenseDescriptionInput,
-      expenseAmountLabel,
-      expenseAmountInput,
-      expenseSubmitButton
-    );
-
-    // Append expense form to the expense section
+    const expenseForm = this.createForm('expenseForm', 'expenseDescription', 'expenseAmount', 'expenseDate', 'Add Expense', this.addExpense.bind(this));
     expenseSection.appendChild(expenseForm);
 
-    //this section is coded in regard to the summary (the total of the Income, Expense, and Budget)
-    const totalIncome = document.createElement('p');
-    totalIncome.textContent = 'Total Income: ';
-    const totalIncomeAmount = document.createElement('span');
-    totalIncomeAmount.id = 'totalIncome';
-    totalIncome.append(totalIncomeAmount);
+    this.createSummary(summarySection);
+}
 
-    const totalExpenses = document.createElement('p');
-    totalExpenses.textContent = 'Total Expenses: ';
-    const totalExpensesAmount = document.createElement('span');
-    totalExpensesAmount.id = 'totalExpenses';
-    totalExpenses.append(totalExpensesAmount);
+createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
+  const form = document.createElement('form');
+  form.id = formId;
+  form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitHandler();
+  });
 
-    const totalBudget = document.createElement('p');
-    totalBudget.textContent = 'Total Budget: ';
-    const totalBudgetAmount = document.createElement('span');
-    totalBudgetAmount.id = 'totalBudget';
-    totalBudget.append(totalBudgetAmount);
+  const descriptionLabel = document.createElement('label');
+  descriptionLabel.setAttribute('for', descriptionId);
+  descriptionLabel.textContent = 'Budget Name:';
+  const descriptionInput = document.createElement('input');
+  descriptionInput.type = 'text';
+  descriptionInput.id = descriptionId;
+  descriptionInput.required = true;
 
-    //implementing a more intuitive look with an Undo and Reset Button
+  const amountLabel = document.createElement('label');
+  amountLabel.setAttribute('for', amountId);
+  amountLabel.textContent = 'Amount:';
+  const amountInput = document.createElement('input');
+  amountInput.type = 'number';
+  amountInput.id = amountId;
+  amountInput.required = true;
+  amountInput.maxLength = 10;
+  
+
+  // Updated lines for replacing existing input with new input
+  amountInput.removeAttribute('type');
+  amountInput.setAttribute('maxlength', '9');
+
+  const dateLabel = document.createElement('label');
+  dateLabel.setAttribute('for', dateId);
+  dateLabel.textContent = 'Date (optional):';
+  const dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.id = dateId;
+
+  const submitButton = document.createElement('button');
+  submitButton.type = 'submit';
+  submitButton.textContent = buttonText;
+
+  form.append(descriptionLabel, descriptionInput, amountLabel, amountInput, dateLabel, dateInput, submitButton);
+  return form;
+}
+
+
+
+  createSummary(summarySection) {
+    const totalIncome = this.createSummaryElement('Total Income:', 'totalIncome');
+    const totalExpenses = this.createSummaryElement('Total Expenses:', 'totalExpenses');
+    const totalBudget = this.createSummaryElement('Total Budget:', 'totalBudget');
+
     const undoButton = document.createElement('button');
     undoButton.id = 'undoButton';
     undoButton.textContent = 'Undo';
@@ -173,15 +121,23 @@ class Budget {
       this.reset();
     });
 
-    // Append elements to the summary section
     summarySection.append(totalIncome, totalExpenses, totalBudget, undoButton, resetButton);
   }
 
-  //this is where the Method to calculate the Incomes
+  createSummaryElement(labelText, spanId) {
+    const element = document.createElement('p');
+    element.textContent = labelText;
+    const span = document.createElement('span');
+    span.id = spanId;
+    element.append(span);
+    return element;
+  }
+
   addIncome() {
     const description = document.getElementById('incomeDescription').value;
     const amount = parseFloat(document.getElementById('incomeAmount').value);
-    const income = new Income(description, amount);
+    const date = document.getElementById('incomeDate').value || null;
+    const income = new Income(description, amount, date);
     if (income.isValid()) {
       this.incomes.push(income);
       this.saveData();
@@ -192,11 +148,11 @@ class Budget {
     }
   }
 
-    //this is where the Method to calculate the Expenses
-    addExpense() {
+  addExpense() {
     const description = document.getElementById('expenseDescription').value;
     const amount = parseFloat(document.getElementById('expenseAmount').value);
-    const expense = new Expense(description, amount);
+    const date = document.getElementById('expenseDate').value || null;
+    const expense = new Expense(description, amount, date);
     if (expense.isValid()) {
       this.expenses.push(expense);
       this.saveData();
@@ -207,17 +163,15 @@ class Budget {
     }
   }
 
-    //Method to undo (talked more about learning aproach in ReadMe file)
-    undo() {
-    this.incomes.pop();
-    this.expenses.pop();
+  undo() {
+    if (this.incomes.length > 0) this.incomes.pop();
+    if (this.expenses.length > 0) this.expenses.pop();
     this.saveData();
     this.updateSummary();
     this.displayTransactions();
   }
 
-    //total Income, Expenses, and Budget calculation Methods
-    calculateTotalIncomes() {
+  calculateTotalIncomes() {
     return this.incomes.reduce((total, income) => total + income.amount, 0);
   }
 
@@ -229,21 +183,18 @@ class Budget {
     return this.calculateTotalIncomes() - this.calculateTotalExpenses();
   }
 
-    //Decided to alocate data to local storage
-    saveData() {
+  saveData() {
     localStorage.setItem('incomes', JSON.stringify(this.incomes));
     localStorage.setItem('expenses', JSON.stringify(this.expenses));
   }
 
-    //this method updates the summary portion of the Budget calculator
-    updateSummary() {
+  updateSummary() {
     document.getElementById('totalIncome').textContent = this.calculateTotalIncomes();
     document.getElementById('totalExpenses').textContent = this.calculateTotalExpenses();
     document.getElementById('totalBudget').textContent = this.calculateTotalBudget();
   }
 
-    //With this Method I displayed the data in to the application.
-    displayTransactions() {
+  displayTransactions() {
     const incomeList = document.getElementById('incomeList');
     const expenseList = document.getElementById('expenseList');
 
@@ -252,19 +203,18 @@ class Budget {
 
     this.incomes.forEach(income => {
       const listItem = document.createElement('li');
-      listItem.textContent = `${income.description}: $${income.amount}`;
+      listItem.textContent = `${income.description}: $${income.amount}${income.date ? ` (Date: ${income.date})` : ''}`;
       incomeList.appendChild(listItem);
     });
 
     this.expenses.forEach(expense => {
       const listItem = document.createElement('li');
-      listItem.textContent = `${expense.description}: $${expense.amount}`;
+      listItem.textContent = `${expense.description}: $${expense.amount}${expense.date ? ` (Date: ${expense.date})` : ''}`;
       expenseList.appendChild(listItem);
     });
   }
 
-    //Method to undo (talked more about learning aproach in ReadMe file)
-    reset() {
+  reset() {
     this.incomes = [];
     this.expenses = [];
     localStorage.removeItem('incomes');
