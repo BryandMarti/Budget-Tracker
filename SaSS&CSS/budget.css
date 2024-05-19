@@ -23,11 +23,12 @@ header #headerTitle {
   margin-bottom: -5px;
 }
 header #headerTitle h1 {
+  font-size: 3rem;
+  font-family: droid sans mono, consolas, monospace;
   padding: 15px;
-  font: 2.5ch droid sans mono, consolas, monospace;
 }
 
-@media screen and (max-width: 1400px) and (min-width: 769px) {
+@media screen and (max-width: 1600px) and (min-width: 769px) {
   header {
     display: flex;
     justify-content: center;
@@ -43,8 +44,9 @@ header #headerTitle h1 {
     width: 84;
     max-width: 80vw;
     display: flex;
+    font-size: 3rem;
+    font-family: droid sans mono, consolas, monospace;
     justify-content: center;
-    font-size: x-large;
     text-shadow: 0 0 20px #000000;
     border: 0.5px solid rgb(255, 165, 1);
     margin-top: 20px;
