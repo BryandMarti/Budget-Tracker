@@ -1,3 +1,5 @@
+//variables that will later be utilized in functions and mixin's
+
 $primary-color: #3498db;
 $color-font: rgb(253, 63, 0);
 $button-color: #2ecc71;
@@ -10,6 +12,8 @@ $char-w: 1ch;
 $gap: .5*$char-w;
 $n-char: 9;
 $in-w: $n-char*($char-w + $gap);
+
+//using import function to collect data from header.scss(header.css)
 @import "./header";
 @import "./footer";
 @mixin beautylabel {
@@ -22,6 +26,8 @@ html, body {
   font-size: $base-font-size;
   line-height: 1.5;
 }
+
+// global scope Mixin's that will dramatically help with keeping track of progress, and consistancy on my code. beter accesibility too.
 @mixin buttonStyles($color, $text-color) {
   padding: 10px 20px;
   border: none;
@@ -148,6 +154,9 @@ main, form, #summary, ul {
   letter-spacing: 0.07ch;
 }
 
+
+//this code was left in case there is any kind of future reference needed, here is the root of the @querys
+//also showcasing my understanding of nesting within the elementId, and in times group nesting to further practice
 #incomeSection, #expenseSection{
   @include amountSection(fit-content);
   #incomeForm, #expenseForm {
@@ -234,7 +243,9 @@ ul {
   }
 }
 
-@media screen and (max-width: 375px) and (min-width: 270px){
+
+//media querys created for Iphone, Android phones, Tables, and larger screen.
+@media screen and (max-width: 375px) and (min-width: 230px){
 
 
   main {
@@ -316,6 +327,8 @@ ul {
         
         #incomeForm, #expenseForm {
           #incomeDescription, #expenseDescription {
+            width: 74vw;
+            border-radius: 5px;
             @include labelDescriptionCodeUI;
           }
         }
@@ -387,11 +400,13 @@ ul {
         
         #incomeForm, #expenseForm {
           #incomeDescription, #expenseDescription {
+            border-radius: 5px;
             @include labelDescriptionCodeUI;
           }
         }
         
         #incomeDate, #expenseDate {
+          border-radius: 5px;
           margin-bottom: 5px;
           font: $font-family
         }
@@ -421,6 +436,8 @@ ul {
     
     
         button{
+          border-radius: 5px;
+          box-shadow: 0px 1px 12px 2px #050505;
           @include buttonStyles($button-color, white);
           font: $font-family;
           #undoButton {
