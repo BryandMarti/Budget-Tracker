@@ -33,20 +33,22 @@ header{
     margin-bottom: -5px;
 
     h1 {
+      font-size: 3rem;
+      font-family: droid sans mono, consolas, monospace;
       padding: 15px;
-      font: $font-family;
     }
   }
 }
 
-@media screen  and (max-width: 1400px) and (min-width: 769px){
+@media screen  and (max-width: 1600px) and (min-width: 769px){
   header{
     @include headerstyle(row, #e0d8d4, black);
     #headerTitle{
       @include widthFix(84, 80vw);
       display: flex;
+      font-size: 3rem;
+      font-family: droid sans mono, consolas, monospace;      
       justify-content: center;
-      font-size: x-large;
       text-shadow: 0 0 20px #000000;
       border: 0.5px solid rgb(255 165 1);
       margin-top: 20px;
