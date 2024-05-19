@@ -79,11 +79,14 @@ createForm(formId, descriptionId, amountId, dateId, buttonText, submitHandler) {
   amountLabel.setAttribute('for', amountId);
   amountLabel.textContent = 'Amount:';
   const amountInput = document.createElement('input');
-  amountInput.type = 'number';
+  amountInput.type = 'text';
   amountInput.id = amountId;
   amountInput.required = true;
   amountInput.maxLength = 10;
-  
+  amountInput.pattern = '^\\d*\\.?\\d+$';
+  amountInput.addEventListener('input', (event) => {
+  event.target.value = event.target.value.replace(/[^0-9.]/g, '');
+});
 
   amountInput.removeAttribute('number');
   amountInput.setAttribute('maxlength', '9');
